@@ -31,6 +31,32 @@ Las diagonales y las verticales del centro no se conectan. Cada fabricante nombr
 manera, así que guíate por la posición del dibujo y busca en la hoja de datos de tu display qué pin
 es cada segmento.
 
+### Diagrama de conexiones
+
+```
+  ARDUINO             DISPLAY 1       DISPLAY 2       DISPLAY 3
+                      (centenas)      (decenas)       (unidades)
+
+  Pin 2  ──[1 kΩ]──────── A1 ──────────── A1 ──────────── A1
+  Pin 3  ──[1 kΩ]──────── A2 ──────────── A2 ──────────── A2
+  Pin 4  ──[1 kΩ]──────── B  ──────────── B  ──────────── B
+  Pin 5  ──[1 kΩ]──────── C  ──────────── C  ──────────── C
+  Pin 6  ──[1 kΩ]──────── D1 ──────────── D1 ──────────── D1
+  Pin 7  ──[1 kΩ]──────── D2 ──────────── D2 ──────────── D2
+  Pin 8  ──[1 kΩ]──────── E  ──────────── E  ──────────── E
+  Pin 9  ──[1 kΩ]──────── F  ──────────── F  ──────────── F
+  Pin 10 ──[1 kΩ]──────── G1 ──────────── G1 ──────────── G1
+  Pin 11 ──[1 kΩ]──────── G2 ──────────── G2 ──────────── G2
+
+  Pin 12 ──────────────── COM
+  Pin 13 ──────────────────────────────── COM
+  Pin A0 ──────────────────────────────────────────────── COM
+```
+
+Cada fila es un solo cable. Las filas de segmentos pasan por su resistencia y llegan al mismo segmento
+de los 3 displays. Cada fila COM llega solo al pin común de su display (cátodo o ánodo, según tu
+modelo). Las diagonales y las verticales del centro quedan sin conectar.
+
 **Segmentos:** cada pin va, a través de una resistencia de 1 kΩ, al mismo segmento de los 3 displays
 (A1 del primero con A1 del segundo y del tercero, y así con cada uno). Son 10 resistencias en total y
 no 30, porque solo hay un display encendido a la vez.
