@@ -70,6 +70,23 @@ Enter. Para salir: **ESC** o **Ctrl+C**.
 
 > Cierra el Monitor Serie del IDE de Arduino antes de correr el script: si lo dejas abierto, el puerto queda ocupado.
 
+## Teclas presionadas rápido (FIFO)
+
+Cada tecla se muestra al menos 1 segundo. Si presionas varias antes de que pase ese tiempo, no se
+reemplazan en pantalla: el Arduino las forma en una FIFO (la primera que llega es la primera que se
+muestra) y las muestra una por una. Por ejemplo, si escribes `HOLA` rápido, la pantalla muestra
+`H`, `O`, `L` y `A`, un segundo cada una.
+
+Mientras una tecla está en pantalla, el Arduino sigue revisando el puerto serial en cada vuelta del
+`loop()` (polling) en vez de quedarse detenido en un `delay()`, así que no se pierden las teclas que
+siguen llegando. La terminal de Python dice `Enviado` al instante, y la pantalla avanza a su propio
+ritmo.
+
+| Ajuste en `firmware.ino` | Qué controla |
+|---|---|
+| `TIEMPO_POR_TECLA` | Milisegundos que se muestra cada tecla (`1000` = 1 segundo) |
+| `TAMANO_FIFO` | Cuántas teclas pueden esperar en la fila (`64`). Si se llena, las nuevas se descartan |
+
 ## Lo que recibe el firmware
 
 | Parámetro | Valor |
