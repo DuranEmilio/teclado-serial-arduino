@@ -5,8 +5,8 @@ pantalla LCD 16x2 la tecla y su valor ASCII en decimal, hexadecimal y binario:
 
 ```
 ┌────────────────┐
-│'A'  ASCII:65   │
-│0x41  0b01000001│
+│T:A Dec:65      │
+│H:41 B:01000001 │
 └────────────────┘
 ```
 
@@ -40,7 +40,7 @@ pantalla LCD 16x2 la tecla y su valor ASCII en decimal, hexadecimal y binario:
 Si el script de Python está corriendo, ciérralo antes de subir: mientras tenga el puerto abierto, la
 carga falla.
 
-Al encender, la pantalla muestra `Esperando tecla`. Si no se ve así:
+Al encender, la pantalla muestra `Listo: Presiona una tecla...`. Si no se ve así:
 
 | Problema | Solución |
 |---|---|
@@ -48,9 +48,9 @@ Al encender, la pantalla muestra `Esperando tecla`. Si no se ve así:
 | No aparece nada | Cambia `0x27` por `0x3F` en `firmware.ino`: es la otra dirección común del módulo |
 
 **Para probar sin Python:** abre el Monitor Serie a 9600 baudios y elige *Sin ajuste de línea*
-(*No line ending*). Escribe `A` y envía: la pantalla debe mostrar `'A'  ASCII:65`. Con *Nueva línea*
+(*No line ending*). Escribe `A` y envía: la pantalla debe mostrar `T:A Dec:65`. Con *Nueva línea*
 se manda también un salto de línea después de la letra, y la pantalla termina mostrando el del salto
-de línea (`ASCII:10`).
+de línea (`Dec:10`).
 
 ## 3. Correr el programa en la PC
 
@@ -65,7 +65,8 @@ python teclado_serial.py <PUERTO>
 | Linux | `/dev/ttyACM0` o `/dev/ttyUSB0` |
 | macOS | `/dev/tty.usbmodem1101` (`ls /dev/tty.usb*`) |
 
-Cada tecla se envía en cuanto se presiona, sin esperar Enter. Para salir: **ESC** o **Ctrl+C**.
+Si no pasas el puerto, el script usa `COM5`. Cada tecla se envía en cuanto se presiona, sin esperar
+Enter. Para salir: **ESC** o **Ctrl+C**.
 
 > Cierra el Monitor Serie del IDE de Arduino antes de correr el script: si lo dejas abierto, el puerto queda ocupado.
 
@@ -93,8 +94,8 @@ El byte que llega **ya es el valor ASCII**, no hay que convertirlo: `'A'` llega 
 | ESC, Ctrl+C | No se envían: cierran el programa |
 | ñ, acentos, flechas, F1–F12 | No se envían |
 
-Enter, Tab, Retroceso y Ctrl + letra no tienen un carácter que se pueda dibujar, así que en la LCD
-aparecen como un bloque lleno (`'█'`), junto con sus valores normales. En macOS/Linux las flechas
+Enter, Tab, Retroceso y Ctrl + letra no tienen un carácter que se pueda dibujar: después de `T:` la
+LCD muestra un símbolo cualquiera, pero `Dec`, `H` y `B` salen bien. En macOS/Linux las flechas
 empiezan con ESC, así que presionar una cierra el programa.
 
 ## Reinicio del Arduino

@@ -1,37 +1,45 @@
-// Recibe por serial 1 byte por tecla y muestra en una LCD 16x2 (I2C) la tecla y su valor ASCII
-// en decimal, hexadecimal y binario:
-//   'A'  ASCII:65
-//   0x41  0b01000001
-// Requiere la librería "LiquidCrystal I2C" de Frank de Brabander (Gestor de librerías del IDE).
+#include <LiquidCrystal.h>
+
 
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
-LiquidCrystal_I2C lcd(0x27, 16, 2);  // dirección I2C del módulo; si la pantalla no muestra nada, prueba 0x3F
+// Dirección I2C común: 0x27 o 0x3F para pantallas 16x2
+LiquidCrystal_I2C lcd(0x27, 16, 2); 
 
 void setup() {
-  Serial.begin(9600);  // misma velocidad que teclado_serial.py
+  Serial.begin(9600);
   lcd.init();
   lcd.backlight();
-  lcd.print("Esperando tecla");
+  lcd.setCursor(0, 0);
+  lcd.print("Listo: Presiona");
+  lcd.setCursor(0, 1);
+  lcd.print("una tecla...");
 }
 
 void loop() {
-  if (!Serial.available()) return;
-  byte ascii = Serial.read();  // el byte ya es el valor ASCII: 'A' -> 65
-
-  char binario[9];
-  for (int i = 0; i < 8; i++) binario[i] = bitRead(ascii, 7 - i) ? '1' : '0';
-  binario[8] = '\0';
-
-  // Enter, Tab, Retroceso, etc. no tienen dibujo: se muestra un bloque lleno (0xFF en la LCD)
-  char tecla = ascii >= 32 && ascii < 127 ? ascii : 0xFF;
-
-  char linea[17];
-  lcd.clear();
-  snprintf(linea, sizeof linea, "'%c'  ASCII:%d", tecla, ascii);
-  lcd.print(linea);
-  snprintf(linea, sizeof linea, "0x%02X  0b%s", ascii, binario);
-  lcd.setCursor(0, 1);
-  lcd.print(linea);
+  if (Serial.available() > 0) {
+    char tecla = Serial.read();
+    
+    lcd.clear();
+    
+    // Fila 0: Muestra la tecla y el valor decimal (ej: "T:9 Dec:57")
+    lcd.setCursor(0, 0);
+    lcd.print("T:");
+    lcd.print(tecla);
+    lcd.print(" Dec:");
+    lcd.print((int)tecla);
+    
+    // Fila 1: Muestra Hex y Binario ajustado a 8 bits (ej: "H:39 B:00111001")
+    lcd.setCursor(0, 1);
+    lcd.print("H:");
+    lcd.print(tecla, HEX);
+    lcd.print(" B:");
+    
+    // Imprimimos el binario rellenando con ceros a la izquierda para completar 8 bits
+    byte val = (byte)tecla;
+    for (int i = 7; i >= 0; i--) {
+      lcd.print((val >> i) & 1);
+    }
+  }
 }
